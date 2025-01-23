@@ -37,8 +37,8 @@ public class ExploradosController {
             Lugar lugar = lugarRepository.findById(explorado.getId().getIdLugar())
                     .orElseThrow(() -> new ResourceNotFoundException("Lugar no encontrado"));
 
-            explorado.setNombre_usuario(usuario.getNombre());
-            explorado.setNombre_lugar(lugar.getNombre());
+            explorado.setUsuario(usuario.getNombre());
+            explorado.setLugar(lugar.getCiudad());
             return explorado;
         }).collect(Collectors.toList());
     }

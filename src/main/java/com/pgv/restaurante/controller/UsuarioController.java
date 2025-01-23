@@ -21,11 +21,27 @@ public class UsuarioController {
     public List<Usuario> obtenerTodosLosUsuarios() {
         return usuarioRepository.findAll();
     }
-
+/* 
     @PostMapping
     public Usuario crearUsuario(@RequestBody Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
+*/
+
+@PostMapping
+public Usuario crearUsuario(
+    @RequestParam String nombre,
+    @RequestParam String correo,
+    @RequestParam String contrasena) {
+
+    Usuario usuario = new Usuario();
+    usuario.setNombre(nombre);
+    usuario.setCorreo(correo);
+    usuario.setContrasena(contrasena);
+
+    return usuarioRepository.save(usuario);
+}
+
 
     @GetMapping("/{id}")
     public Usuario obtenerUsuarioPorId(@PathVariable("id") Long id) {

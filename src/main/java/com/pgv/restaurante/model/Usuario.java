@@ -1,7 +1,6 @@
 package com.pgv.restaurante.model;
 
 import jakarta.persistence.*;
-
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -14,13 +13,21 @@ public class Usuario {
     private String correo;
     private String contrasena;
 
+    // Constructor por defecto
     public Usuario() {}
+
+    // Constructor parametrizado
+    public Usuario(String nombre, String correo, String contrasena) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.contrasena = contrasena;
+    }
+
+    // Getters y setters (ya los tienes)
 
     public Long getId() {
         return id;
     }
-
-    // Otros getters y setters
 
     public void setId(Long id) {
         this.id = id;
@@ -41,13 +48,15 @@ public class Usuario {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
 
     public String getContrasena() {
         return contrasena;
     }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
 }
+
+
 
