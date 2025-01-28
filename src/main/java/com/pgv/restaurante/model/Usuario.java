@@ -12,6 +12,7 @@ public class Usuario {
     private String nombre;
     private String correo;
     private String contrasena;
+    private String token;
 
     // Constructor por defecto
     public Usuario() {}
@@ -56,6 +57,10 @@ public class Usuario {
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
     }
+
+    public String getToken() { return this.token; }
+
+    public void setToken(String token) { this.token = token; }
 }
 
 
