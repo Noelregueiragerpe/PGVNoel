@@ -1,5 +1,6 @@
 package com.pgv.restaurante.controller;
 
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -11,6 +12,7 @@ import com.pgv.restaurante.repository.UsuarioRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +54,8 @@ public class UsuarioController {
     }
 
     private String getJWTToken(String nombre) {
-        String secretKey = "mySecretKey";
+        //Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        String secretKey = "mySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 
@@ -66,8 +69,8 @@ public class UsuarioController {
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                .signWith(SignatureAlgorithm.HS512,
-                        secretKey.getBytes()).compact();
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
         ;
 
         return "Bearer " + token;
