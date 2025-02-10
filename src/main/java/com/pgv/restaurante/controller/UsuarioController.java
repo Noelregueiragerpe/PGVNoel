@@ -2,6 +2,8 @@ package com.pgv.restaurante.controller;
 
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +55,31 @@ public class UsuarioController {
         return usuarioRepository.save(usuario);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUsuario(
+            @RequestParam String correo,
+            @RequestParam String contrasena) {
+
+        // Buscar usuario por correo
+        Usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
+
+        if (usuario == null || !usuario.getContrasena().equals(contrasena)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
+        }
+
+        // Generar nuevo token
+        String token = getJWTToken(usuario.getNombre());
+        usuario.setToken(token);
+        usuario.setFechaRegistro(new Date());
+        usuario.setActivo(true);
+
+        // Guardar usuario con el nuevo token
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok(usuario);
+    }
+
+
     private String getJWTToken(String nombre) {
         String secretKey = "mySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKeymySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
@@ -90,8 +117,21 @@ public class UsuarioController {
         usuario.setNombre(detallesUsuario.getNombre());
         usuario.setCorreo(detallesUsuario.getCorreo());
         usuario.setContrasena(detallesUsuario.getContrasena());
+        usuario.setActivo(detallesUsuario.isActivo());
         return usuarioRepository.save(usuario);
     }
+
+    @PutMapping("/logout/{id}")
+    public ResponseEntity<Usuario> logoutUsuario(@PathVariable("id") Long id) {
+        System.out.println(id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        System.out.println(usuario.getNombre());
+        usuario.setActivo(false);
+        usuarioRepository.save(usuario);
+        return ResponseEntity.ok(usuario);
+    }
+
 
     @DeleteMapping("/{id}")
     public Usuario eliminarUsuario(@PathVariable("id") Long id) {
