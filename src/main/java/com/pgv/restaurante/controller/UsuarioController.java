@@ -79,19 +79,38 @@ public class UsuarioController {
 
     // ✅ INICIO DE SESIÓN (LOGIN) SIN PASSWORD ENCRYPT
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario usuario) {
-        // 📌 Buscar usuario en la base de datos por correo
-        Usuario usuarioExistente = usuarioRepository.findByCorreo(usuario.getCorreo());
+    public ResponseEntity<?> loginUsuario(
+            @RequestParam String correo,
+            @RequestParam String contrasena) {
 
-        // 🔴 Si el usuario no existe o la contraseña es incorrecta
-        if (usuarioExistente == null || !usuario.getContrasena().equals(usuarioExistente.getContrasena())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("❌ Credenciales incorrectas");
+        // Buscar usuario por correo
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+
+        if (usuario == null || !usuario.getContrasena().equals(contrasena)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
         }
 
-        // 🔑 Generar un nuevo token JWT
-        String token = getJWTToken(usuarioExistente.getNombre());
+        // Generar nuevo token
+        String token = getJWTToken(usuario.getNombre());
+        usuario.setToken(token);
+        usuario.setFechaRegistro(new Date());
+        usuario.setActivo(true);
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        // Guardar usuario con el nuevo token
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok(usuario);
+    }
+
+    @PutMapping("/logout/{id}")
+    public ResponseEntity<Usuario> logoutUsuario(@PathVariable("id") Long id) {
+        System.out.println(id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        System.out.println(usuario.getNombre());
+        usuario.setActivo(false);
+        usuarioRepository.save(usuario);
+        return ResponseEntity.ok(usuario);
     }
 
     // ✅ GENERACIÓN DE TOKEN JWT

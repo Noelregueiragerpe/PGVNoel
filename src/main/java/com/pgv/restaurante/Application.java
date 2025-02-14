@@ -27,7 +27,9 @@ public class Application {
             .csrf(AbstractHttpConfigurer::disable)  // Deshabilitar CSRF
             .authorizeHttpRequests(authz -> authz
                 // Permitir login y registro sin autenticación (POST)
-                .requestMatchers(HttpMethod.POST, "/api/usuario/login", "/api/usuario").permitAll()
+                .requestMatchers("/api/usuario").permitAll()
+                    .requestMatchers("/api/usuario/login").permitAll()
+                    .requestMatchers("/api/usuario/logout/**").permitAll()
                 // Permitir también métodos GET en /api/usuario si es necesario
                 .requestMatchers(HttpMethod.GET, "/api/usuario").permitAll()
                 // Requiere autenticación para todas las demás rutas
