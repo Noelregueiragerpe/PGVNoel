@@ -20,14 +20,12 @@ public class Explorado {
     
         private boolean favorito;
     
-        // Campos adicionales
-        @Transient // No se persiste en la base de datos
+        @Transient 
         private String usuario;
     
-        @Transient // No se persiste en la base de datos
+        @Transient 
         private String lugar;
     
-        // Getters y setters
         public ExploradoId getId() {
             return id;
         }

@@ -9,35 +9,49 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(17)  // Usa Java 17 como toolchain
     }
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.withType(JavaCompile) {
-    options.compilerArgs << '-parameters'
+    options.compilerArgs << '-parameters'  // Mantener parámetros de los métodos en el bytecode
 }
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    // Dependencia para Spring Data JPA
+dependencies { // Dependencia para Spring Data JPA (para trabajar con bases de datos)
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // Dependencia web (incluye Spring MVC y otras)
+    // Dependencia web (incluye Spring MVC y otras funcionalidades)
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // Driver de MySQL
+    // Driver de MySQL (usado en tu base de datos MySQL)
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 
-    // Dependencia explícita de javax.persistence (opcional si ya está incluida)
-    implementation 'javax.persistence:javax.persistence-api:2.2'
-
+    // Dependencia para Spring Security (para manejar autenticación y autorización)
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-core:6.4.2'
+    implementation 'org.springframework.security:spring-security-web'
 
+    // Dependencias necesarias para manejar JWT (para autenticación mediante tokens)
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // Dependencia para base de datos en memoria H2 (útil para pruebas y desarrollo)
+    runtimeOnly 'com.h2database:h2'
+
+    // Dependencias de pruebas (Revisado)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'  // Incluye JUnit 5 y otras herramientas
+
+    // Dependencia para usar el lanzador de JUnit Platform
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.8.2'
+}
+
+test {
+    useJUnitPlatform()  // Asegura que se utilice JUnit 5 para las pruebas
 }

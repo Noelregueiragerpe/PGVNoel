@@ -31,12 +31,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.clearContext();
                 }
             } else {
-                SecurityContextHolder.clearContext();  // Esto limpia el contexto si el token no está presente o es inválido
+                SecurityContextHolder.clearContext(); 
             }
             chain.doFilter(request, response);
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // El token es inválido o ha expirado
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());  // Responde con un error 403
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); 
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage()); 
             return;
         }
     }

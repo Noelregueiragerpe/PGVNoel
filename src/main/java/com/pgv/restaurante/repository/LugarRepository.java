@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.pgv.restaurante.model.Lugar;
 
 public interface LugarRepository extends JpaRepository<Lugar, Long> {
-    // Métodos personalizados si es necesario
 }
 

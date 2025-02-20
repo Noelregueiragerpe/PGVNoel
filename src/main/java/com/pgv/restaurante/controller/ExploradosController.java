@@ -27,7 +27,6 @@ public class ExploradosController {
     @Autowired
     private LugarRepository lugarRepository;
 
-    // Obtener todos los explorados
     @GetMapping
     public List<Explorado> obtenerTodosLosExplorados() {
         List<Explorado> explorados = exploradoRepository.findAll();
@@ -43,13 +42,11 @@ public class ExploradosController {
         }).collect(Collectors.toList());
     }
 
-    // Crear un nuevo explorado
     @PostMapping
     public Explorado crearExplorado(@RequestBody Explorado explorado) {
         return exploradoRepository.save(explorado);
     }
 
-    // Editar un explorado
     @PutMapping("/{idUsuario}/{idLugar}")
     public Explorado editarExplorado(@PathVariable("idUsuario") Long idUsuario, 
                                      @PathVariable("idLugar") Long idLugar, 
@@ -58,11 +55,10 @@ public class ExploradosController {
         Explorado explorado = exploradoRepository.findById(exploradoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Explorado no encontrado"));
 
-        explorado.setFavorito(exploradoDetails.isFavorito()); // Actualiza los campos necesarios
+        explorado.setFavorito(exploradoDetails.isFavorito()); 
         return exploradoRepository.save(explorado);
     }
 
-    // Eliminar un explorado
     @DeleteMapping("/{idUsuario}/{idLugar}")
     public void eliminarExplorado(@PathVariable("idUsuario") Long idUsuario, 
                                   @PathVariable("idLugar") Long idLugar) {

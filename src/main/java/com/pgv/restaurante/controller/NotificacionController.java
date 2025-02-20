@@ -35,24 +35,20 @@ public class NotificacionController {
     @PostMapping
     public ResponseEntity<Notificacion> crearNotificacion(@RequestBody Map<String, Object> datos) {
         try {
-            // Extraer los valores del JSON
             String mensaje = (String) datos.get("mensaje");
             String tipo = (String) datos.get("tipo");
             Long usuarioId = datos.get("usuario_id") != null ? Long.valueOf(datos.get("usuario_id").toString()) : null;
     
-            // Crear la notificación
             Notificacion notificacion = new Notificacion();
             notificacion.setMensaje(mensaje);
             notificacion.setTipo(tipo);
     
-            // Asociar el usuario si el ID está presente
             if (usuarioId != null) {
                 Usuario usuario = usuarioRepository.findById(usuarioId)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + usuarioId));
                 notificacion.setUsuario(usuario);
             }
     
-            // Guardar la notificación
             Notificacion nuevaNotificacion = notificacionRepository.save(notificacion);
             return ResponseEntity.ok(nuevaNotificacion);
     
@@ -63,22 +59,29 @@ public class NotificacionController {
     
 
     @PutMapping("/{id}")
-    public ResponseEntity<Notificacion> actualizarNotificacion(@PathVariable Long id, 
-                                                             @RequestBody Notificacion detallesNotificacion) {
-        Notificacion notificacion = notificacionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Notificación no encontrada con id: " + id));
+public ResponseEntity<Notificacion> actualizarNotificacion(@PathVariable Long id, 
+                                                           @RequestBody Notificacion detallesNotificacion) {
+    Notificacion notificacion = notificacionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Notificación no encontrada con id: " + id));
 
-        try {
-            notificacion.setMensaje(detallesNotificacion.getMensaje());
-            notificacion.setTipo(detallesNotificacion.getTipo());
-            notificacion.setUsuario(detallesNotificacion.getUsuario());
-            
-            Notificacion notificacionActualizada = notificacionRepository.save(notificacion);
-            return ResponseEntity.ok(notificacionActualizada);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar la notificación: " + e.getMessage());
+    try {
+       
+        notificacion.setMensaje(detallesNotificacion.getMensaje());
+        notificacion.setTipo(detallesNotificacion.getTipo());
+        
+        if (detallesNotificacion.getUsuario() != null && detallesNotificacion.getUsuario().getId() != null) {
+            Long usuarioId = detallesNotificacion.getUsuario().getId();
+            Usuario usuario = usuarioRepository.findById(usuarioId)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + usuarioId));
+            notificacion.setUsuario(usuario); 
         }
+        Notificacion notificacionActualizada = notificacionRepository.save(notificacion);
+        return ResponseEntity.ok(notificacionActualizada);
+    } catch (Exception e) {
+        throw new RuntimeException("Error al actualizar la notificación: " + e.getMessage());
     }
+}
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarNotificacion(@PathVariable Long id) {

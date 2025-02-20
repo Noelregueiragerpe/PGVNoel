@@ -17,7 +17,7 @@ public class Lugar {
     private String categoria;
 
     @ManyToOne
-    @JoinColumn(name = "id_pelicula") // Clave foránea en la tabla "lugar"
+    @JoinColumn(name = "id_pelicula") 
     private Pelicula pelicula;
 
     public Lugar() {}

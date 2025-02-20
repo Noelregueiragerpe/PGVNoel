@@ -12,20 +12,14 @@ public class Usuario {
     private String nombre;
     private String correo;
     private String contrasena;
-    private String token;
 
-    // Constructor por defecto
     public Usuario() {}
 
-    // Constructor parametrizado
     public Usuario(String nombre, String correo, String contrasena) {
         this.nombre = nombre;
         this.correo = correo;
         this.contrasena = contrasena;
     }
-
-    
-    // Getters y setters (ya los tienes)
 
     public Long getId() {
         return id;
@@ -59,9 +53,6 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    public String getToken() { return this.token; }
-
-    public void setToken(String token) { this.token = token; }
 }
 
 

@@ -23,17 +23,14 @@ public class Application {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults())  // Habilitar CORS
-            .csrf(AbstractHttpConfigurer::disable)  // Deshabilitar CSRF
+            .cors(withDefaults())  
+            .csrf(AbstractHttpConfigurer::disable) 
             .authorizeHttpRequests(authz -> authz
-                // Permitir login y registro sin autenticación (POST)
                 .requestMatchers(HttpMethod.POST, "/api/usuario/login", "/api/usuario").permitAll()
-                // Permitir también métodos GET en /api/usuario si es necesario
                 .requestMatchers(HttpMethod.GET, "/api/usuario").permitAll()
-                // Requiere autenticación para todas las demás rutas
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);  // Filtro JWT
+            .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class); 
 
         return http.build();
     }

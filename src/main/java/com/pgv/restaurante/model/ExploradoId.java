@@ -9,16 +9,13 @@ public class ExploradoId implements Serializable {
     private Long idUsuario;
     private Long idLugar;
 
-    // Constructor vacío
     public ExploradoId() {}
 
-    // Constructor con parámetros
     public ExploradoId(Long idUsuario, Long idLugar) {
         this.idUsuario = idUsuario;
         this.idLugar = idLugar;
     }
 
-    // Getters y setters
     public Long getIdUsuario() {
         return idUsuario;
     }
@@ -35,7 +32,6 @@ public class ExploradoId implements Serializable {
         this.idLugar = idLugar;
     }
 
-    // Implementación de equals y hashCode (obligatorio para claves primarias compuestas)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

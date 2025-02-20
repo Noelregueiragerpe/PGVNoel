@@ -9,7 +9,7 @@ import com.pgv.restaurante.repository.LugarRepository;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*") // Permite solicitudes desde Ionic
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/lugar")
 public class LugarController {

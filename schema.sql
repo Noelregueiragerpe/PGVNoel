@@ -5,7 +5,6 @@ CREATE TABLE `usuario` (
   `contrasena` varchar(255) DEFAULT NULL,
   `correo` varchar(255) DEFAULT NULL,
   `nombre` varchar(255) DEFAULT NULL,
-  `token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `correo_UNIQUE` (`correo`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
