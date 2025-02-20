@@ -1,6 +1,9 @@
 package com.pgv.restaurante.model;
 
 import jakarta.persistence.*;
+
+import java.util.Date;
+
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -10,6 +13,7 @@ public class Usuario {
     private Long id;
 
     private String nombre;
+    @Column(unique = true)
     private String correo;
     private String contrasena;
 
