@@ -37,7 +37,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
         try {
-            
+
             if (!EMAIL_PATTERN.matcher(usuario.getCorreo()).matches()) {
                 return ResponseEntity.badRequest().body("❌ El correo electrónico no es válido");
             }
@@ -68,7 +68,6 @@ public class UsuarioController {
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable("id") Long id, @RequestBody Usuario detallesUsuario) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("⚠️ Usuario no encontrado"));
-
         usuario.setNombre(detallesUsuario.getNombre());
         usuario.setCorreo(detallesUsuario.getCorreo());
         usuario.setContrasena(detallesUsuario.getContrasena());
