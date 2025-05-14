@@ -2,8 +2,6 @@ package com.pgv.restaurante.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
-
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -48,6 +46,8 @@ public class Usuario {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+   
 
     public String getContrasena() {
         return contrasena;
