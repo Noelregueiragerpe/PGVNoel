@@ -1,5 +1,9 @@
 package com.pgv.restaurante.controller;
 
+import com.pgv.restaurante.model.Cabeza;
+import com.pgv.restaurante.model.Cuerpo;
+import com.pgv.restaurante.repository.CabezasRepository;
+import com.pgv.restaurante.repository.CuerposRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +20,10 @@ public class AvatarController {
 
     @Autowired
     private AvatarRepository avatarRepository;
+    @Autowired
+    private CabezasRepository cabezasRepository;
+    @Autowired
+    private CuerposRepository cuerposRepository;
 
     @GetMapping
     public List<Avatar> obtenerTodosLosAvatares() {
@@ -29,15 +37,16 @@ public class AvatarController {
 
     @GetMapping("/{id}")
     public Avatar obtenerAvatarPorId(@PathVariable("id") Long id) {
-        return avatarRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Avatar no encontrado"));
+        return avatarRepository.findByUsuarioId(id);
     }
 
     @PutMapping("/{id}")
-    public Avatar actualizarAvatar(@PathVariable("id") Long id, @RequestBody Avatar detallesAvatar) {
-        Avatar avatar = avatarRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Avatar no encontrado"));
-        
+    public Avatar actualizarAvatar(@PathVariable("id") Long id, @RequestParam long idCabeza, @RequestParam long idCuerpo) {
+        Avatar avatar = avatarRepository.findByUsuarioId(id);
+        Cabeza nuevaCabeza = cabezasRepository.findById(idCabeza).orElseThrow(() -> new ResourceNotFoundException("⚠️ Cabeza no encontrada"));
+        Cuerpo nuevoCuerpo = cuerposRepository.findById(idCuerpo).orElseThrow(() -> new ResourceNotFoundException("⚠️ Cuerpo no encontrado"));
+        avatar.setCabeza(nuevaCabeza);
+        avatar.setCuerpo(nuevoCuerpo);
         return avatarRepository.save(avatar);
     }
 

@@ -13,10 +13,12 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/usuario")
 public class UsuarioController {
@@ -85,29 +87,33 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario usuario) {
-        
-        if (!EMAIL_PATTERN.matcher(usuario.getCorreo()).matches()) {
+    public ResponseEntity<?> login(@RequestParam String correo, @RequestParam String contrasena) {
+        if (!EMAIL_PATTERN.matcher(correo).matches()) {
             return ResponseEntity.badRequest().body("❌ El correo electrónico no es válido");
         }
 
-        Usuario usuarioExistente = usuarioRepository.findByCorreo(usuario.getCorreo());
+        Usuario usuarioExistente = usuarioRepository.findByCorreo(correo);
 
         if (usuarioExistente == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("❌ Correo no registrado");
         }
 
-        if (!PASSWORD_PATTERN.matcher(usuario.getContrasena()).matches()) {
+        if (!PASSWORD_PATTERN.matcher(contrasena).matches()) {
             return ResponseEntity.badRequest().body("❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número");
         }
 
-        if (!usuario.getContrasena().equals(usuarioExistente.getContrasena())) {
+        if (!contrasena.equals(usuarioExistente.getContrasena())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("❌ Contraseña incorrecta");
         }
 
         String token = getJWTToken(usuarioExistente.getNombre());
-        return ResponseEntity.ok(new AuthResponse(token));
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("id", usuarioExistente.getId());
+        response.put("nombre", usuarioExistente.getNombre());
+        return ResponseEntity.ok(response);
     }
+
 
     private String getJWTToken(String nombre) {
         List<String> roles = List.of("ROLE_USER"); 
@@ -121,6 +127,16 @@ public class UsuarioController {
                 .compact();
 
         return "Bearer " + token;
+    }
+
+    @PutMapping("/logout/{id}")
+    public ResponseEntity<Usuario> logoutUsuario(@PathVariable("id") Long id) {
+        System.out.println(id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        System.out.println(usuario.getNombre());
+        usuarioRepository.save(usuario);
+        return ResponseEntity.ok(usuario);
     }
 
     class AuthResponse {

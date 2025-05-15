@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "Avatar")
 public class Avatar {
-    
+
     @ManyToOne
-    @JoinColumn(name = "idcabeza") 
+    @JoinColumn(name = "idcabeza")
     private Cabeza cabeza;
 
     @ManyToOne
-    @JoinColumn(name = "idcuerpo") 
+    @JoinColumn(name = "idcuerpo")
     private Cuerpo cuerpo;
 
     @OneToOne
@@ -27,18 +27,18 @@ public class Avatar {
         return idavatar;
     }
 
-   public Usuario getUsuario() {
-    return usuario;
-}
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
-public void setUsuario(Usuario usuario) {
-    this.usuario = usuario;
-}
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
     public void setId(Long idavatar) {
         this.idavatar = idavatar;
     }
 
-  public Cabeza getCabeza() {
+    public Cabeza getCabeza() {
         return cabeza;
     }
 
@@ -46,7 +46,7 @@ public void setUsuario(Usuario usuario) {
         this.cabeza = cabeza;
     }
 
-public Cuerpo getCuerpo() {
+    public Cuerpo getCuerpo() {
         return cuerpo;
     }
 
