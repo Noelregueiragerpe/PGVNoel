@@ -43,6 +43,7 @@ public class LugarController {
         lugar.setCoordenadasx(detallesLugar.getCoordenadasx());
         lugar.setCoordenadasy(detallesLugar.getCoordenadasy());
         lugar.setCategoria(detallesLugar.getCategoria());
+        lugar.setImagen(detallesLugar.getImagen());
         return lugarRepository.save(lugar);
     }
 

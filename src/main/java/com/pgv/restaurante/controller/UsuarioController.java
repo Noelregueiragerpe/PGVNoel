@@ -1,5 +1,9 @@
 package com.pgv.restaurante.controller;
 
+import com.pgv.restaurante.model.Avatar;
+import com.pgv.restaurante.repository.AvatarRepository;
+import com.pgv.restaurante.repository.CabezasRepository;
+import com.pgv.restaurante.repository.CuerposRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +34,12 @@ public class UsuarioController {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$");
+    @Autowired
+    private CabezasRepository cabezasRepository;
+    @Autowired
+    private CuerposRepository cuerposRepository;
+    @Autowired
+    private AvatarRepository avatarRepository;
 
     @GetMapping
     public List<Usuario> obtenerTodosLosUsuarios() {
@@ -51,8 +61,12 @@ public class UsuarioController {
             if (!PASSWORD_PATTERN.matcher(usuario.getContrasena()).matches()) {
                 return ResponseEntity.badRequest().body("❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número");
             }
-
+            Avatar avatar = new Avatar();
+            avatar.setCabeza(cabezasRepository.findById((long)3).orElseThrow(() -> new ResourceNotFoundException("⚠️ Cabeza no encontrada")));
+            avatar.setCuerpo(cuerposRepository.findById((long)1).orElseThrow(() -> new ResourceNotFoundException("⚠️ Cuerpo no encontrado")));
+            avatar.setUsuario(usuario);
             usuarioRepository.save(usuario);
+            avatarRepository.save(avatar);
             return ResponseEntity.ok("✅ Usuario registrado exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌ Error al registrar usuario: " + e.getMessage());

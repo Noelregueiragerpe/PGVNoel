@@ -15,6 +15,7 @@ public class Lugar {
     private double coordenadasx;
     private double coordenadasy;
     private String categoria;
+    private String imagen;
 
     @ManyToOne
     @JoinColumn(name = "id_pelicula") 
@@ -69,6 +70,10 @@ public class Lugar {
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
+
+    public String getImagen() { return this.imagen; }
+
+    public void setImagen(String imagen) { this.imagen = imagen; }
 
     public Pelicula getPelicula() {
         return pelicula;
