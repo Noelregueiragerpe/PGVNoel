@@ -72,14 +72,14 @@ public class Application {
                         new Lugar("Ciencia", "Valencia", 39.4551, -0.3549, "Ciudad_de_las_Artes_y_las_Ciencias_Tomorrowland.jpg", "Ciudad de las Artes y las Ciencias", peliculas[15]),
                 };
                 Cabeza[] cabezas = new Cabeza[]{
-                    new Cabeza("cabezaSimple", ""),
-                    new Cabeza("cabezaLotr", ""),
-                    new Cabeza("cabezaIron", ""),
+                        new Cabeza("cabezaSimple", ""),
+                        new Cabeza("cabezaLotr", ""),
+                        new Cabeza("cabezaIron", ""),
                 };
                 Cuerpo[] cuerpos = new Cuerpo[]{
-                    new Cuerpo("cuerpoSimple", ""),
-                    new Cuerpo("cuerpoLotr", ""),
-                    new Cuerpo("cuerpoIron", ""),
+                        new Cuerpo("cuerpoSimple", ""),
+                        new Cuerpo("cuerpoLotr", ""),
+                        new Cuerpo("cuerpoIron", ""),
                 };
                 peliculaRepository.saveAll(Arrays.asList(peliculas));
                 System.out.println("📀 Base de datos inicializada con películas.");
@@ -96,14 +96,15 @@ public class Application {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults())
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers(HttpMethod.POST, "/api/usuario/login", "/api/usuario").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/usuario").permitAll()
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .cors(withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers(HttpMethod.POST, "/api/usuario/login", "/api/usuario").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/usuario").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/explorado").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

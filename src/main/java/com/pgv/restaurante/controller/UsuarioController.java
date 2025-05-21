@@ -62,7 +62,7 @@ public class UsuarioController {
                 return ResponseEntity.badRequest().body("❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número");
             }
             Avatar avatar = new Avatar();
-            avatar.setCabeza(cabezasRepository.findById((long)3).orElseThrow(() -> new ResourceNotFoundException("⚠️ Cabeza no encontrada")));
+            avatar.setCabeza(cabezasRepository.findById((long)1).orElseThrow(() -> new ResourceNotFoundException("⚠️ Cabeza no encontrada")));
             avatar.setCuerpo(cuerposRepository.findById((long)1).orElseThrow(() -> new ResourceNotFoundException("⚠️ Cuerpo no encontrado")));
             avatar.setUsuario(usuario);
             usuarioRepository.save(usuario);

@@ -1,15 +1,14 @@
 package com.pgv.restaurante.controller;
 
+import com.pgv.restaurante.model.*;
+import com.pgv.restaurante.repository.NotificacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.pgv.restaurante.ResourceNotFoundException;
-import com.pgv.restaurante.model.Explorado;
-import com.pgv.restaurante.model.Usuario;
-import com.pgv.restaurante.model.Lugar;
 import com.pgv.restaurante.repository.ExploradoRepository;
 import com.pgv.restaurante.repository.UsuarioRepository;
 import com.pgv.restaurante.repository.LugarRepository;
-import com.pgv.restaurante.model.ExploradoId;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +26,8 @@ public class ExploradosController {
     @Autowired
     private LugarRepository lugarRepository;
 
+    @Autowired NotificacionRepository notificacionRepository;;
+
     @GetMapping
     public List<Explorado> obtenerTodosLosExplorados() {
         List<Explorado> explorados = exploradoRepository.findAll();
@@ -42,9 +43,43 @@ public class ExploradosController {
         }).collect(Collectors.toList());
     }
 
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<Explorado>> obtenerExploradosPorUsuario(@PathVariable Long idUsuario) {
+        List<Explorado> explorados = exploradoRepository.findByIdIdUsuario(idUsuario);
+
+        List<Explorado> exploradosConDatos = explorados.stream().map(explorado -> {
+            Lugar lugar = lugarRepository.findById(explorado.getId().getIdLugar())
+                    .orElseThrow(() -> new ResourceNotFoundException("Lugar no encontrado"));
+            explorado.setLugarEntidad(lugar);
+            return explorado;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(exploradosConDatos);
+    }
+
+
     @PostMapping
-    public Explorado crearExplorado(@RequestBody Explorado explorado) {
-        return exploradoRepository.save(explorado);
+    public ResponseEntity<?> crearExplorado(@RequestBody Explorado explorado) {
+        Long idUsuario = explorado.getId().getIdUsuario();
+        Long idLugar = explorado.getId().getIdLugar();
+
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Lugar lugar = lugarRepository.findById(idLugar)
+                .orElseThrow(() -> new RuntimeException("Lugar no encontrado"));
+
+        explorado.setUsuarioEntidad(usuario);
+        explorado.setLugarEntidad(lugar);
+
+        exploradoRepository.save(explorado);
+
+        // Crear y guardar la notificación
+        Notificacion notificacion = new Notificacion();
+        notificacion.setUsuario(usuario);
+        notificacion.setMensaje("Has visitado " + lugar.getNombre());
+        notificacionRepository.save(notificacion); // 👈 Faltaba esto
+
+        return ResponseEntity.ok("Explorado creado correctamente");
     }
 
     @PutMapping("/{idUsuario}/{idLugar}")
