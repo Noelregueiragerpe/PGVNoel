@@ -16,6 +16,11 @@ public class Cuerpo {
 
     public Cuerpo() {}
 
+    public Cuerpo(String nombre, String codigo) {
+        this.nombre = nombre;
+        this.codigo = codigo;
+    }
+
     public Long getId() {
         return idCuerpo;
     }

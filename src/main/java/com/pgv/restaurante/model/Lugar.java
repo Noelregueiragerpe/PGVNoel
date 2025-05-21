@@ -23,6 +23,16 @@ public class Lugar {
 
     public Lugar() {}
 
+    public Lugar(String categoria, String ciudad, double coordenadasx, double coordenadasy, String imagen, String nombre, Pelicula pelicula) {
+        this.categoria = categoria;
+        this.ciudad = ciudad;
+        this.coordenadasx = coordenadasx;
+        this.coordenadasy = coordenadasy;
+        this.imagen = imagen;
+        this.nombre = nombre;
+        this.pelicula = pelicula;
+    }
+
     public Long getId() {
         return id;
     }

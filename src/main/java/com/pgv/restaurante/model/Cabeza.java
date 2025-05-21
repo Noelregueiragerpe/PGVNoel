@@ -17,6 +17,11 @@ public class Cabeza {
 
     public Cabeza() {}
 
+    public Cabeza(String nombre, String codigo) {
+        this.nombre = nombre;
+        this.codigo = codigo;
+    }
+
     public Long getId() {
         return idCabeza;
     }

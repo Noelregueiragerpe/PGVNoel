@@ -15,6 +15,12 @@ public class Pelicula {
 
     public Pelicula() {}
 
+    public Pelicula(String nombre, String genero, int anio) {
+        this.nombre = nombre;
+        this.genero = genero;
+        this.anio = anio;
+    }
+
     public Long getId() {
         return id;
     }
